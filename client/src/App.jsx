@@ -92,7 +92,8 @@ function App() {
         version: formData.version,
         patch: formData.patch,
         certified: formData.certified,
-        supportStatus: formData.supportStatus
+        supportStatus: formData.supportStatus,
+        notes: formData.notes
       };
       await insertSafe('stack', stackPayload);
 
@@ -104,8 +105,7 @@ function App() {
         versionDetails: formData.versionDetails,
         vcpu: formData.vcpu,
         ram: formData.ram,
-        storage: formData.storage,
-        notes: formData.notes
+        storage: formData.storage
       };
 
       try {
@@ -194,6 +194,11 @@ function App() {
             </div>
           </div>
 
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label>Notes / Remarks</label>
+            <textarea name="notes" value={formData.notes} onChange={handleInputChange} rows="3"></textarea>
+          </div>
+
           <h3 style={{ marginTop: '2rem', fontSize: '1.2rem', color: 'var(--primary-color)' }}>Component Details</h3>
           <div className="form-grid">
             <div>
@@ -222,8 +227,7 @@ function App() {
             </div>
 
             <div className="full-width">
-              <label>Notes / Remarks</label>
-              <textarea name="notes" value={formData.notes} onChange={handleInputChange} rows="3"></textarea>
+              {/* Notes moved upwards */}
             </div>
           </div>
 

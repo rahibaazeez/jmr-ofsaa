@@ -1,4 +1,4 @@
-id,coreComponent,subApplication,versionDetails,vcpu,ram,storage,notes
-Test_1,Core A,Sub App 1,v1.0.0,4,16GB,100GB,Initial test record
-ClientA_1,Core DB,Engine,v2.3,8,32GB,500GB,Production DB
-ClientB_1,Core MW,Server,v5.0,2,8GB,50GB,Dev environment
+id,coreComponent,subApplication,versionDetails,vcpu,ram,storage
+Test_1,Core A,Sub App 1,v1.0.0,4,16GB,100GB
+ClientA_1,Core DB,Engine,v2.3,8,32GB,500GB
+ClientB_1,Core MW,Server,v5.0,2,8GB,50GB

@@ -1,4 +1,4 @@
-id,clientName,componentType,product,version,patch,certified,supportStatus
-Test_1,Test Client,Operating System,Oracle Solaris,11.4,Patch 1,Yes,Supported
-ClientA_1,Client A,Database,Oracle Database,19c,RU 10,Yes,Supported
-ClientB_1,Client B,Middleware,WebLogic,14.1.1,PatchSet 2,No,Sustaining Support
+id,clientName,componentType,product,version,patch,certified,supportStatus,notes
+Test_1,Test Client,Operating System,Oracle Solaris,11.4,Patch 1,Yes,Supported,Initial test record
+ClientA_1,Client A,Database,Oracle Database,19c,RU 10,Yes,Supported,Production DB
+ClientB_1,Client B,Middleware,WebLogic,14.1.1,PatchSet 2,No,Sustaining Support,Dev environment

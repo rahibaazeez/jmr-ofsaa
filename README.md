@@ -53,6 +53,7 @@ Contains the high-level stack information.
 *   `patch` (text)
 *   `certified` (text)
 *   `supportStatus` (text)
+*   `notes` (text)
 
 ### 2. `component` Table
 Contains detailed component specifications.
@@ -63,7 +64,6 @@ Contains detailed component specifications.
 *   `vcpu` (text)
 *   `ram` (text)
 *   `storage` (text)
-*   `notes` (text)
 
 ## 📝 Usage
 
