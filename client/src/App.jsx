@@ -3,12 +3,28 @@ import { supabase } from './supabaseClient';
 
 const initialFormState = {
   clientName: '',
+  // Stack 1
   componentType: '',
   product: '',
   version: '',
   patch: '',
   certified: '',
   supportStatus: '',
+  // Stack 2
+  componentType_2: '',
+  product_2: '',
+  version_2: '',
+  patch_2: '',
+  certified_2: '',
+  supportStatus_2: '',
+  // Stack 3
+  componentType_3: '',
+  product_3: '',
+  version_3: '',
+  patch_3: '',
+  certified_3: '',
+  supportStatus_3: '',
+  // Other
   notes: '',
   coreComponent: '',
   subApplication: '',
@@ -84,22 +100,42 @@ function App() {
       };
 
       // 1. Insert into Main Stack Table
-      const stackPayload = {
-        id: customId,
-        clientName: formData.clientName,
-        componentType: formData.componentType,
-        product: formData.product,
-        version: formData.version,
-        patch: formData.patch,
-        certified: formData.certified,
-        supportStatus: formData.supportStatus,
-        notes: formData.notes
-      };
-      await insertSafe('stack', stackPayload);
+      // 1. Prepare Stack Payloads (Handle up to 3 sets)
+      const stacks = [
+        { suffix: '', data: { componentType: formData.componentType, product: formData.product, version: formData.version, patch: formData.patch, certified: formData.certified, supportStatus: formData.supportStatus } },
+        { suffix: '_2', data: { componentType: formData['componentType_2'], product: formData['product_2'], version: formData['version_2'], patch: formData['patch_2'], certified: formData['certified_2'], supportStatus: formData['supportStatus_2'] } },
+        { suffix: '_3', data: { componentType: formData['componentType_3'], product: formData['product_3'], version: formData['version_3'], patch: formData['patch_3'], certified: formData['certified_3'], supportStatus: formData['supportStatus_3'] } }
+      ];
+
+      // Insert Stacks sequentially
+      let currentIdIndex = nextIndex;
+
+      for (const stack of stacks) {
+        // Skip if componentType is empty as a basic check
+        if (!stack.data.componentType) continue;
+
+        const thisId = `${prefix}${currentIdIndex}`;
+
+        const stackPayload = {
+          id: thisId,
+          clientName: formData.clientName,
+          ...stack.data,
+          notes: formData.notes
+        };
+
+        await insertSafe('stack', stackPayload);
+        currentIdIndex++; // Increment for next stack entry
+      }
+
+      // Use the FIRST ID for the component details (or creating separate details? User only has one Component Details section currently)
+      // Assuming Component Details belongs to the overall Client request, we might just attach it to the first ID or all?
+      // For now, let's attach it to the first generated ID to be safe.
+      const primaryId = `${prefix}${nextIndex}`;
 
       // 2. Insert into Component Details Table
+      // 2. Insert into Component Details Table (Linked to primary ID)
       const detailsPayload = {
-        id: customId,
+        id: primaryId,
         coreComponent: formData.coreComponent,
         subApplication: formData.subApplication,
         versionDetails: formData.versionDetails,
@@ -194,6 +230,80 @@ function App() {
             </div>
           </div>
 
+          <h3 style={{ marginTop: '1rem', fontSize: '1.2rem', color: 'var(--primary-color)' }}>Stack Information</h3>
+          <div className="form-grid">
+            <div>
+              <label>Component Type</label>
+              <input name="componentType_2" value={formData.componentType_2} onChange={handleInputChange} placeholder="e.g. Database" />
+            </div>
+            <div>
+              <label>Product</label>
+              <input name="product_2" value={formData.product_2} onChange={handleInputChange} />
+            </div>
+            <div>
+              <label>Version</label>
+              <input name="version_2" value={formData.version_2} onChange={handleInputChange} />
+            </div>
+            <div>
+              <label>Patch / PSU/RU</label>
+              <input name="patch_2" value={formData.patch_2} onChange={handleInputChange} />
+            </div>
+            <div>
+              <label>Certified</label>
+              <select name="certified_2" value={formData.certified_2} onChange={handleInputChange}>
+                <option value="">Select...</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+            <div>
+              <label>Support Status</label>
+              <select name="supportStatus_2" value={formData.supportStatus_2} onChange={handleInputChange}>
+                <option value="">Select...</option>
+                <option value="Supported">Supported</option>
+                <option value="Sustaining Support">Sustaining Support</option>
+                <option value="Not Supported">Not Supported</option>
+              </select>
+            </div>
+          </div>
+
+          <h3 style={{ marginTop: '1rem', fontSize: '1.2rem', color: 'var(--primary-color)' }}>Stack Information</h3>
+          <div className="form-grid">
+            <div>
+              <label>Component Type</label>
+              <input name="componentType_3" value={formData.componentType_3} onChange={handleInputChange} placeholder="e.g. Middleware" />
+            </div>
+            <div>
+              <label>Product</label>
+              <input name="product_3" value={formData.product_3} onChange={handleInputChange} />
+            </div>
+            <div>
+              <label>Version</label>
+              <input name="version_3" value={formData.version_3} onChange={handleInputChange} />
+            </div>
+            <div>
+              <label>Patch / PSU/RU</label>
+              <input name="patch_3" value={formData.patch_3} onChange={handleInputChange} />
+            </div>
+            <div>
+              <label>Certified</label>
+              <select name="certified_3" value={formData.certified_3} onChange={handleInputChange}>
+                <option value="">Select...</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+            <div>
+              <label>Support Status</label>
+              <select name="supportStatus_3" value={formData.supportStatus_3} onChange={handleInputChange}>
+                <option value="">Select...</option>
+                <option value="Supported">Supported</option>
+                <option value="Sustaining Support">Sustaining Support</option>
+                <option value="Not Supported">Not Supported</option>
+              </select>
+            </div>
+          </div>
+
           <div style={{ marginBottom: '1.5rem' }}>
             <label>Notes / Remarks</label>
             <textarea name="notes" value={formData.notes} onChange={handleInputChange} rows="3"></textarea>
@@ -203,7 +313,12 @@ function App() {
           <div className="form-grid">
             <div>
               <label>Core Component</label>
-              <input name="coreComponent" value={formData.coreComponent} onChange={handleInputChange} />
+              <select name="coreComponent" value={formData.coreComponent} onChange={handleInputChange}>
+                <option value="">Select Core Component...</option>
+                <option value="OFSAA Infrastructure & Framework Components">OFSAA Infrastructure & Framework Components</option>
+                <option value="Risk Management Applications">Risk Management Applications</option>
+                <option value="Finance & Regulatory Reporting">Finance & Regulatory Reporting</option>
+              </select>
             </div>
             <div>
               <label>Sub Application</label>
